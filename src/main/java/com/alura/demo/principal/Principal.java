@@ -8,8 +8,10 @@ import com.alura.demo.service.ConvierteDatos;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
+import java.util.DoubleSummaryStatistics;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /**
  * Clase Principal: controla el flujo de la aplicación de consola.
@@ -92,7 +94,13 @@ public class Principal {
             }
 
             //Trabajando con estdísticas:
-
+            DoubleSummaryStatistics est = datos.resultados().stream()
+                    .filter(d->d.numeroDeDescargas() > 0)
+                    .collect(Collectors.summarizingDouble(DatosLibros::numeroDeDescargas));
+            System.out.println("Cantidad media de descargas: "+est.getAverage());
+            System.out.println("Cantidad máxima de descargas: "+est.getMax());
+            System.out.println("Cantidad mínima de descargas: "+est.getMin());
+            System.out.println("Cantidad de registros evaluados para calcular las estadísticas: "+est.getCount());
         } catch (Exception e) {
             // Capturar posibles errores de URL o parseo
             System.err.println("Error al buscar el libro: " + e.getMessage());
